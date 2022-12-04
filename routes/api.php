@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('/register', 'App\Http\Controllers\Api\Auth\PassportAuthController@register')->middleware('guest');
+Route::post('/login', 'App\Http\Controllers\Api\Auth\PassportAuthController@login')->middleware('guest');
+Route::post('/logout', 'App\Http\Controllers\Api\Auth\PassportAuthController@logout')->middleware('guest');
+
+ 
+Route::get('/auth/redirect/github', function () {
+    return Socialite::driver('github')->redirect();
+});
+ 
+Route::get('/auth/callback/github', function () {
+    $user = Socialite::driver('github')->user();
+ 
+    // $user->token
+});
+Route::middleware('auth:api')->group(function () {
+    // our routes to be protected will go in here
 });
